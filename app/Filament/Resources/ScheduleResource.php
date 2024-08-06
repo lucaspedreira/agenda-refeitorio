@@ -61,7 +61,7 @@ class ScheduleResource extends Resource
                     ->native(false)
                     ->closeOnDateSelection()
                     ->minDate(now()->toDateString())
-                    ->maxDate(now()->endOfWeek()->toDateString())
+                    ->maxDate(now()->endOfWeek(5)->toDateString())
                     ->displayFormat('d/m/Y')
                     ->required(),
                 Forms\Components\ToggleButtons::make('status')
@@ -86,6 +86,7 @@ class ScheduleResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('date')
                     ->label('Data')
+                    ->date('l, d/m/Y')
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
