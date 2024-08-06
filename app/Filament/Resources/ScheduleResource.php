@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ScheduleResource\Pages;
 use App\Filament\Resources\ScheduleResource\RelationManagers;
+use App\Models\Meal;
 use App\Models\Schedule;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,12 +20,28 @@ class ScheduleResource extends Resource
     protected static ?string $model = Schedule::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $modelLabel = 'Agendamento';
+    protected static ?string $pluralModelLabel = 'Agendamentos';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Select::make('user_id')
+                    ->label('Aluno')
+                    ->placeholder('Selecione um aluno')
+                    ->options(
+                        User::all()->pluck('name', 'id')->toArray()
+                    )
+                ->searchable()
+                    ->native(false)
+                ->required(),
+                Forms\Components\Select::make('meal_id')
+                    ->label('Refeição')
+                    ->placeholder('Selecione uma refeição')
+                    ->options(
+                        Meal::all()->pluck('name', 'id')->toArray()
+                    )
             ]);
     }
 

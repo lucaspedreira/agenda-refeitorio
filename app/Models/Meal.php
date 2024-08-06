@@ -10,7 +10,7 @@ class Meal extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['meal'];
+    protected $fillable = ['name'];
 
     public function schedules(): HasMany
     {

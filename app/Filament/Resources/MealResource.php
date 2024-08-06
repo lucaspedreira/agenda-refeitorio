@@ -25,7 +25,7 @@ class MealResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('meal')
+                Forms\Components\TextInput::make('name')
                     ->label('Refeição')
                     ->required(),
             ]);
@@ -35,7 +35,7 @@ class MealResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('meal')
+                Tables\Columns\TextColumn::make('name')
                     ->label('Refeição')
                     ->searchable()
                     ->sortable(),
