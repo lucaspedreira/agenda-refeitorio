@@ -13,8 +13,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Unique;
 
 class ScheduleResource extends Resource
 {
@@ -34,23 +32,31 @@ class ScheduleResource extends Resource
                     ->options(
                         User::all()->pluck('name', 'id')->toArray()
                     )
-                ->searchable()
+                    ->searchable()
                     ->native(false)
-                ->required(),
+                    ->required(),
                 Forms\Components\Select::make('meal_id')
                     ->label('Refeição')
                     ->placeholder('Selecione uma refeição')
                     ->options(
                         Meal::all()->pluck('name', 'id')->toArray()
                     )
-                    ->unique(modifyRuleUsing: function (Unique $rule, callable $get) {
+                    ->rules([
+                        fn(Forms\Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+                            $date = date('Y-m-d', strtotime($get('date')));
+                            $user_id = $get('user_id');
+                            $meal_id = $get('meal_id');
 
-                        dd($get('date'), $get('user_id'), $get('meal_id'));
-                        return $rule->where('date', $get('date'))
-                            ->where('user_id', $get('user_id'))
-                            ->where('meal_id', $get('meal_id'));
-                    })
-                ->required(),
+                            if (Schedule::where('date', $date)
+                                ->where('user_id', $user_id)
+                                ->where('meal_id', $meal_id)
+                                ->exists()) {
+                                $fail('Já existe um agendamento para este aluno nesta refeição nesta data.');
+                            }
+
+                        }
+                    ])
+                    ->required(),
                 Forms\Components\DatePicker::make('date')
                     ->label('Data')
                     ->native(false)
