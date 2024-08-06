@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ScheduleStatus;
 use App\Filament\Resources\ScheduleResource\Pages;
 use App\Filament\Resources\ScheduleResource\RelationManagers;
 use App\Models\Meal;
@@ -12,8 +13,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 
 class ScheduleResource extends Resource
 {
@@ -42,6 +43,24 @@ class ScheduleResource extends Resource
                     ->options(
                         Meal::all()->pluck('name', 'id')->toArray()
                     )
+                    ->unique(modifyRuleUsing: function (Unique $rule, callable $get) {
+
+                        dd($get('date'), $get('user_id'), $get('meal_id'));
+                        return $rule->where('date', $get('date'))
+                            ->where('user_id', $get('user_id'))
+                            ->where('meal_id', $get('meal_id'));
+                    })
+                ->required(),
+                Forms\Components\DatePicker::make('date')
+                    ->label('Data')
+                    ->native(false)
+                    ->displayFormat('d/m/Y')
+                    ->required(),
+                Forms\Components\ToggleButtons::make('status')
+                    ->label('Status')
+                    ->options(ScheduleStatus::class)
+                    ->default(ScheduleStatus::Scheduled)
+                    ->required(),
             ]);
     }
 
@@ -49,7 +68,24 @@ class ScheduleResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Aluno')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('meal.name')
+                    ->label('Refeição')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date')
+                    ->label('Data')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime('d/m/y H:i')
+                    ->label('Cadastrar em')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge()
             ])
             ->filters([
                 //
