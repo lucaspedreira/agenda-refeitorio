@@ -13,6 +13,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rules\Unique;
 
 class ScheduleResource extends Resource
 {
@@ -41,20 +42,32 @@ class ScheduleResource extends Resource
                     ->options(
                         Meal::all()->pluck('name', 'id')->toArray()
                     )
-                    ->rules([
-                        fn(Forms\Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
-                            $date = date('Y-m-d', strtotime($get('date')));
-                            $user_id = $get('user_id');
-                            $meal_id = $get('meal_id');
+//                    ->rules([
+//                        fn(Forms\Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
+//                            $date = date('Y-m-d', strtotime($get('date')));
+//                            $user_id = $get('user_id');
+//                            $meal_id = $get('meal_id');
+//
+//                            if (Schedule::where('date', $date)
+//                                ->where('user_id', $user_id)
+//                                ->where('meal_id', $meal_id)
+//                                ->exists()) {
+//                                $fail('Já existe um agendamento para este aluno nesta refeição nesta data.');
+//                            }
+//
+//                        }
+//                    ])
+                    ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, callable $get) {
+                        $date = date('Y-m-d', strtotime($get('date')));
+                        $user_id = $get('user_id');
+                        $meal_id = $get('meal_id');
 
-                            if (Schedule::where('date', $date)
-                                ->where('user_id', $user_id)
-                                ->where('meal_id', $meal_id)
-                                ->exists()) {
-                                $fail('Já existe um agendamento para este aluno nesta refeição nesta data.');
-                            }
-
-                        }
+                        return $rule->where('date', $date)
+                            ->where('user_id', $user_id)
+                            ->where('meal_id', $meal_id);
+                    })
+                    ->validationMessages([
+                        'unique' => 'Já existe um agendamento para este aluno nesta refeição nesta data.'
                     ])
                     ->required(),
                 Forms\Components\DatePicker::make('date')
@@ -85,10 +98,6 @@ class ScheduleResource extends Resource
                 Tables\Columns\TextColumn::make('date')
                     ->label('Data')
                     ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d/m/y H:i')
-                    ->label('Cadastrar em')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
