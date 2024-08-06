@@ -62,6 +62,7 @@ class ScheduleResource extends Resource
                     ->closeOnDateSelection()
                     ->minDate(now()->toDateString())
                     ->maxDate(now()->endOfWeek(5)->toDateString())
+                    ->default(now()->toDateString())
                     ->displayFormat('d/m/Y')
                     ->required(),
                 Forms\Components\ToggleButtons::make('status')
