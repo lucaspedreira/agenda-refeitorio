@@ -42,21 +42,6 @@ class ScheduleResource extends Resource
                     ->options(
                         Meal::all()->pluck('name', 'id')->toArray()
                     )
-//                    ->rules([
-//                        fn(Forms\Get $get): \Closure => function (string $attribute, $value, \Closure $fail) use ($get) {
-//                            $date = date('Y-m-d', strtotime($get('date')));
-//                            $user_id = $get('user_id');
-//                            $meal_id = $get('meal_id');
-//
-//                            if (Schedule::where('date', $date)
-//                                ->where('user_id', $user_id)
-//                                ->where('meal_id', $meal_id)
-//                                ->exists()) {
-//                                $fail('Já existe um agendamento para este aluno nesta refeição nesta data.');
-//                            }
-//
-//                        }
-//                    ])
                     ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, callable $get) {
                         $date = date('Y-m-d', strtotime($get('date')));
                         $user_id = $get('user_id');
@@ -73,6 +58,9 @@ class ScheduleResource extends Resource
                 Forms\Components\DatePicker::make('date')
                     ->label('Data')
                     ->native(false)
+                    ->closeOnDateSelection()
+                    ->minDate(now()->toDateString())
+                    ->maxDate(now()->endOfWeek()->toDateString())
                     ->displayFormat('d/m/Y')
                     ->required(),
                 Forms\Components\ToggleButtons::make('status')
