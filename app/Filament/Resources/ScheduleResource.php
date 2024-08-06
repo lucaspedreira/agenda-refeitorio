@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\MealResource\Pages;
-use App\Filament\Resources\MealResource\RelationManagers;
-use App\Models\Meal;
+use App\Filament\Resources\ScheduleResource\Pages;
+use App\Filament\Resources\ScheduleResource\RelationManagers;
+use App\Models\Schedule;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,21 +13,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class MealResource extends Resource
+class ScheduleResource extends Resource
 {
-    protected static ?string $model = Meal::class;
+    protected static ?string $model = Schedule::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $modelLabel = 'Refeição';
-    protected static ?string $pluralModelLabel = 'Refeições';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('meal')
-                    ->label('Refeição')
-                    ->required(),
+                //
             ]);
     }
 
@@ -35,18 +31,7 @@ class MealResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('meal')
-                    ->label('Refeição')
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d/m/y H:i')
-                    ->label('Cadastrar em')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('d/m/y H:i')
-                    ->label('Atualizado em')
-                    ->sortable(),
+                //
             ])
             ->filters([
                 //
@@ -65,7 +50,7 @@ class MealResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageMeals::route('/'),
+            'index' => Pages\ManageSchedules::route('/'),
         ];
     }
 }
