@@ -10,14 +10,13 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CafeteriaResource extends Resource
 {
     protected static ?string $model = Cafeteria::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?int $navigationSort = 3;
     protected static ?string $modelLabel = 'Refeitório';
     protected static string $title = 'Refeitórios';
 
