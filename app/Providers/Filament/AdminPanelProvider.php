@@ -25,6 +25,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->brandLogo(asset('img/logo.svg'))
             ->brandLogoHeight('40px')
+            ->favicon(asset('img/logo.svg'))
             ->id('admin')
             ->path('admin')
             ->registration()
@@ -55,6 +56,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])->plugins([
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
             ]);
     }
 }
