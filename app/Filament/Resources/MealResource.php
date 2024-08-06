@@ -15,7 +15,7 @@ class MealResource extends Resource
 {
     protected static ?string $model = Meal::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'mdi-pasta';
     protected static ?int $navigationSort = 2;
     protected static ?string $modelLabel = 'Refeição';
     protected static ?string $pluralModelLabel = 'Refeições';

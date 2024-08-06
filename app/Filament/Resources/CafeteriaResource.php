@@ -15,7 +15,7 @@ class CafeteriaResource extends Resource
 {
     protected static ?string $model = Cafeteria::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'mdi-table-picnic';
     protected static ?int $navigationSort = 3;
     protected static ?string $modelLabel = 'Refeitório';
     protected static string $title = 'Refeitórios';
